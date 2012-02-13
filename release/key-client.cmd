@@ -1,0 +1,2 @@
+@echo off
+java -classpath lib/swt32.jar;lib/org.eclipse.core.commands_3.6.0.I20110111-0800.jar;lib/org.eclipse.equinox.common_3.6.0.v20110523.jar;lib/org.eclipse.jface_3.7.0.I20110522-1430.jar;lib/org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar;lib/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar;key-client.jar key.ClientLauncher
