@@ -7,6 +7,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
 public class ClientDialog extends MessageDialog {
 
@@ -16,9 +18,19 @@ public class ClientDialog extends MessageDialog {
 
 	@Override
 	protected Control createCustomArea(Composite parent) {
-		Control area = new ClientComposite(parent, SWT.NONE);
-		area.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		return area;
+		TabFolder tab = new TabFolder(parent, SWT.TOP);
+		TabItem tabItem;
+		
+		tabItem = new TabItem(tab, SWT.NONE);
+		tabItem.setText("Создание");
+		tabItem.setControl(new NewComposite(tab, SWT.NONE));
+
+		tabItem = new TabItem(tab, SWT.NONE);
+		tabItem.setText("Редактирование");
+		tabItem.setControl(new EditComposite(tab, SWT.NONE));
+
+		tab.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		return tab;
 	}
 
 	protected void setShellStyle(int newShellStyle) {

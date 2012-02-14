@@ -7,7 +7,6 @@ import key.model.DBLayer;
 import key.model.KeyGenerator;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,17 +19,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-public class ClientComposite extends Composite {
+public class NewComposite extends Composite {
 
 	private int num = 0;
 
-	private TableSet tableSet;
-	private TableKey tableKey;
 	private Combo comboOctet;
 	private Spinner spinnerCount;
 	private Text textComment;
+	private SetTable tableSet;
+	private KeyTable tableKey;
 
-	public ClientComposite(Composite parent, int style) {
+	public NewComposite(Composite parent, int style) {
 		super(parent, style);
 
 		setLayout(new GridLayout(2, false));
@@ -63,9 +62,11 @@ public class ClientComposite extends Composite {
 			}
 		});
 
-		tableSet = new TableSet(this, new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+		tableSet = new SetTable(this, false);
+		tableSet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
-		tableKey = new TableKey(this, new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		tableKey = new KeyTable(this);
+		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		button = new Button(this, SWT.PUSH);
 		button.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));

@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-public class TableKey {
+public class KeyTable {
 
 	private final static String[] COLUMNS_KEY = new String[] {"Ключ", "MD5" };
 
@@ -15,9 +15,8 @@ public class TableKey {
 
 	private Table table;
 
-	public TableKey(Composite parent, Object layoutData) {
+	public KeyTable(Composite parent) {
 		table = new Table(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER);
-		table.setLayoutData(layoutData);
 		table.setLinesVisible (true);
 		table.setHeaderVisible (true);
 
@@ -29,10 +28,8 @@ public class TableKey {
 		}
 	}
 
-	public void reset() {
-		for (TableItem tableItem : table.getItems()) {
-			tableItem.dispose();
-		}
+	public void setLayoutData (Object layoutData) {
+		table.setLayoutData(layoutData);
 	}
 
 	public void setValues(String key, String md5) {
@@ -43,4 +40,11 @@ public class TableKey {
 //		column.pack();
 //	}
 	}
+
+	public void reset() {
+		for (TableItem tableItem : table.getItems()) {
+			tableItem.dispose();
+		}
+	}
+
 }
