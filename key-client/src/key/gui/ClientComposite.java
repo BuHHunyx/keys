@@ -3,6 +3,7 @@ package key.gui;
 import java.util.Calendar;
 import java.util.Date;
 
+import key.model.DBLayer;
 import key.model.KeyGenerator;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -58,7 +59,7 @@ public class ClientComposite extends Composite {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				fillResults();
+				generate();
 			}
 		});
 
@@ -72,12 +73,12 @@ public class ClientComposite extends Composite {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				MessageDialog.openWarning(getShell(), null, "UNDER CONSTRUCTION");
+				save();
 			}
 		});
 	}
 
-	private void fillResults() {
+	private void generate() {
 		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -93,5 +94,9 @@ public class ClientComposite extends Composite {
 			String md5 = DigestUtils.md5Hex(key);
 			tableKey.setValues(key, md5);
 		}
+	}
+
+	private void save() {
+		DBLayer.save();
 	}
 }
