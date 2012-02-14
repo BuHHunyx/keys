@@ -1,6 +1,7 @@
 package key.gui;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -10,14 +11,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-public class ClientDialog extends MessageDialog {
+public class ClientDialog extends Dialog {
 
 	public ClientDialog(Shell parentShell) {
-		super(parentShell, "Клиент", null, /*"Укажите параметры"*/null, 0, new String[] {"Выход"}, 0);
+		super(parentShell);
 	}
 
 	@Override
-	protected Control createCustomArea(Composite parent) {
+	protected Control createDialogArea(Composite parent) {
 		TabFolder tab = new TabFolder(parent, SWT.TOP);
 		TabItem tabItem;
 		
@@ -33,10 +34,24 @@ public class ClientDialog extends MessageDialog {
 		return tab;
 	}
 
-	protected void setShellStyle(int newShellStyle) {
-	    super.setShellStyle(newShellStyle | SWT.RESIZE);
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				"Выход", false);
 	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Клиент");
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
+	@Override
 	protected Point getInitialSize() {
 		Point pt = super.getInitialSize();
 		pt.x = Math.max(pt.x, 600);

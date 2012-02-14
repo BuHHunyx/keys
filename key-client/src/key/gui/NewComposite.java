@@ -53,7 +53,8 @@ public class NewComposite extends Composite {
 		textComment.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
 		Button button = new Button(this, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
+		GridData buttonGridData = new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1);
+		button.setLayoutData(buttonGridData);
 		button.setText("Создать");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -69,7 +70,7 @@ public class NewComposite extends Composite {
 		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		button = new Button(this, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
+		button.setLayoutData(buttonGridData);
 		button.setText("Сохранить");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
