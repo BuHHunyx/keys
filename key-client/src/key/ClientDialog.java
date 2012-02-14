@@ -83,7 +83,7 @@ public class ClientDialog extends MessageDialog {
 		});
 		label = new Label(area, SWT.NONE);
 
-		table = new Table(area, /*SWT.SINGLE | SWT.FULL_SELECTION*/SWT.BORDER);
+		table = new Table(area, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		table.setLinesVisible (true);
 		table.setHeaderVisible (true);
