@@ -8,6 +8,6 @@
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.equinox.common_3.6.0.v20110523.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar" sourcepath="F:/commons-codec-1.6-sources.jar"/>
+	<classpathentry kind="lib" path="../release/lib/commons-codec-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

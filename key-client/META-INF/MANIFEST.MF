@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.swt,
  org.eclipse.jface
 Main-Class: key.ClientLauncher
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
