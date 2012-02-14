@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ClientDialog extends MessageDialog {
 
 	public ClientDialog(Shell parentShell) {
-		super(parentShell, "Клиент", null, "Укажите параметры", 0, new String[] {"Выход"}, 0);
+		super(parentShell, "Клиент", null, /*"Укажите параметры"*/null, 0, new String[] {"Выход"}, 0);
 	}
 
 	@Override
@@ -27,8 +27,8 @@ public class ClientDialog extends MessageDialog {
 
 	protected Point getInitialSize() {
 		Point pt = super.getInitialSize();
-		pt.x = Math.max(pt.x, 400);
-		pt.y = Math.max(pt.y, 500);
+		pt.x = Math.max(pt.x, 600);
+		pt.y = Math.max(pt.y, 400);
 		return pt;
 	}
 }
