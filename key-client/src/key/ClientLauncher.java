@@ -1,5 +1,7 @@
 package key;
 
+import key.gui.ClientDialog;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 

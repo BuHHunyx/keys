@@ -1,4 +1,4 @@
-package key;
+package key.gui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
