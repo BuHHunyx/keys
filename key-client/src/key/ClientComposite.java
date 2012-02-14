@@ -1,11 +1,8 @@
 package key;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,12 +60,8 @@ public class ClientComposite extends Composite {
 					TableItem item = new TableItem(table, SWT.NONE);
 					String key = generateKey(octet);
 					item.setText(0, key);
-					try {
-						String md5 = getMD5(key);
-						item.setText(1, md5);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					String md5 = DigestUtils.md5Hex(key);
+					item.setText(1, md5);
 				}
 			}
 		});
@@ -99,19 +92,4 @@ public class ClientComposite extends Composite {
 		return result;
 	}
 
-	private static final String getMD5(String value) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		MessageDigest md = MessageDigest.getInstance("MD5");
-		
-		byte[] bytesOfMessage = value.getBytes("UTF-8");
-		byte[] thedigest = md.digest(bytesOfMessage);
-		BigInteger bigInt = new BigInteger(1,thedigest);
-		String md5 = bigInt.toString(16);
-		// Now we need to zero pad it if you actually want the full 32 chars.
-		while(md5.length() < 32 ){
-			md5 = "0" + md5;
-		}
-
-		return md5;
-	}
-	
 }
