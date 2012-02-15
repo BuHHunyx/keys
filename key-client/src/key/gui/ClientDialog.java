@@ -3,13 +3,14 @@ package key.gui;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
 public class ClientDialog extends Dialog {
 
@@ -19,16 +20,18 @@ public class ClientDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		TabFolder tab = new TabFolder(parent, SWT.TOP);
-		TabItem tabItem;
-		
-		tabItem = new TabItem(tab, SWT.NONE);
-		tabItem.setText("Создание");
-		tabItem.setControl(new NewComposite(tab, SWT.NONE));
+		CTabFolder tab = new CTabFolder(parent, SWT.TOP);
+		CTabItem tabItem;
 
-		tabItem = new TabItem(tab, SWT.NONE);
+		tabItem = new CTabItem(tab, SWT.NONE);
 		tabItem.setText("Редактирование");
+		tabItem.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/edit.gif")));
 		tabItem.setControl(new EditComposite(tab, SWT.NONE));
+
+		tabItem = new CTabItem(tab, SWT.NONE);
+		tabItem.setText("Создание");
+		tabItem.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/add.gif")));
+		tabItem.setControl(new NewComposite(tab, SWT.NONE));
 
 		tab.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return tab;
@@ -36,14 +39,14 @@ public class ClientDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				"Выход", false);
+		createButton(parent, IDialogConstants.CANCEL_ID, "Выход", false);
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Клиент");
+		newShell.setImage(new Image(newShell.getDisplay(), getClass().getResourceAsStream("/logo.gif")));
 	}
 
 	@Override

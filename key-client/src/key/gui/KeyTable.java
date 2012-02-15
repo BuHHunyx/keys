@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class KeyTable {
 
-	private final static String[] COLUMNS_KEY = new String[] {"Ключ", "MD5" };
+	private final static String[] COLUMNS_KEY = {"Ключ", "MD5" };
 
 	private final static int COLUMN_KEY = 0;
 	private final static int COLUMN_MD5 = 1;

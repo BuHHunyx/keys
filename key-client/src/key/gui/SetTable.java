@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -19,7 +20,7 @@ public class SetTable {
 			new Locale(System.getProperty("user.language")));
 	//new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	private final static String[] LABELS = new String[] {
+	private final static String[] LABELS = {
 		"Номер пачки",
 		"Дата формирования",
 		"Комментарий",
@@ -64,8 +65,13 @@ public class SetTable {
 		table.setLayoutData(layoutData);
 	}
 
-	public void addSelectionListener (SelectionListener listener) {
-		table.addSelectionListener(listener);
+	public void addSelectionListener (final SetSelectionListener listener) {
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				listener.selected();
+			}
+		});
 	}
 
 	public void setValues(int n, Date date, String comment, Date from, Date to) {
@@ -93,4 +99,9 @@ public class SetTable {
 		}
 	}
 
+	public static interface SetSelectionListener {
+
+		void selected();
+
+	}
 }

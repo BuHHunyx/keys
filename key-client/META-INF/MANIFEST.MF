@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: key-client
 Bundle-SymbolicName: key-client
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.swt,
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt,
  org.eclipse.jface
 Main-Class: key.ClientLauncher
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

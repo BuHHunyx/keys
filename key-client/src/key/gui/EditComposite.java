@@ -1,16 +1,21 @@
 package key.gui;
 
+import java.io.IOException;
 import java.util.Date;
+
+import key.model.CsvExport;
+import key.model.ExportData;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.FileDialog;
 
 public class EditComposite extends Composite {
 
@@ -25,6 +30,7 @@ public class EditComposite extends Composite {
 
 		Button button = new Button(this, SWT.PUSH);
 		button.setText("ќбновить");
+		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/refresh.gif")));
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -35,6 +41,7 @@ public class EditComposite extends Composite {
 		buttonExport = new Button(this, SWT.PUSH);
 		buttonExport.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
 		buttonExport.setText("Ёкспорт...");
+		buttonExport.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/export.gif")));
 		buttonExport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -47,11 +54,10 @@ public class EditComposite extends Composite {
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1);
 		gd.heightHint = 50;
 		tableSet.setLayoutData(gd);
-		tableSet.addSelectionListener(new SelectionAdapter() {
+		tableSet.addSelectionListener(new SetTable.SetSelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Table table = (Table)e.widget;
-				buttonExport.setEnabled(table.getSelection().length > 0);
+			public void selected() {
+				buttonExport.setEnabled(true);
 			}
 		});
 		tableKey = new KeyTable(this);
@@ -64,6 +70,19 @@ public class EditComposite extends Composite {
 	}
 
 	private void export() {
-		MessageDialog.openWarning(getShell(), null, "UNDER CONSTRUCTION");
+		FileDialog fd = new FileDialog(getShell(), SWT.SAVE);
+		String[] filterExt = { "*.csv" };
+		fd.setFilterExtensions(filterExt);
+        String selected = fd.open();
+        if (null != selected) {
+    		try {
+				CsvExport.export(selected, new ExportData[] {
+						new ExportData("1234", new Date(), new Date(), false),
+						new ExportData("4321", new Date(), new Date(), true)
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
 	}
 }
