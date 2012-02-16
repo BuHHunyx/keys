@@ -24,7 +24,7 @@ public class CsvExport {
 		String to = DATE_FORMAT.format(setData.getTo());
 		for (KeyData key : setData.getKeys()) {
 			writer.writeNext(new String[] {
-					key.getKey(),
+					key.getHash(),
 					from,
 					to,
 					new Date().before(setData.getTo()) ? ENABLED : DISABLED

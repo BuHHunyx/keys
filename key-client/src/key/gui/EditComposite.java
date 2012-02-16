@@ -6,6 +6,7 @@ import java.util.Collection;
 import key.model.CsvExport;
 import key.model.DBLayer;
 import key.model.KeyData;
+import key.model.KeyException;
 import key.model.SetData;
 
 import org.eclipse.swt.SWT;
@@ -86,7 +87,7 @@ public class EditComposite extends Composite {
     		try {
 				CsvExport.export(selected, selectedSetData);
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new KeyException("Ошибка при экспорте", e);
 			}
         }
 	}

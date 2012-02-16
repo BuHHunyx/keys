@@ -69,7 +69,9 @@ public class NewComposite extends Composite {
 		tableSet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
 		tableKey = new KeyTable(this);
-		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		gd.heightHint = 50;
+		tableKey.setLayoutData(gd);
 
 		buttonSave = new Button(this, SWT.PUSH);
 		buttonSave.setLayoutData(buttonGridData);

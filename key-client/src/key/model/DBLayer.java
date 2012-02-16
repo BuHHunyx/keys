@@ -56,7 +56,7 @@ public class DBLayer {
 			getConnection().createStatement().executeUpdate(SQL_CREATE_SET);
 			getConnection().createStatement().executeUpdate(SQL_CREATE_KEY);
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new KeyException("Ошибка создания базы", e);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class DBLayer {
 				return id;
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new KeyException("Ошибка сохранения в базу", e);
 		}
 		return -1;
 	}
@@ -104,7 +104,7 @@ public class DBLayer {
 				}
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new KeyException("Ошибка чтения из базы", e);
 		}
 		return sets;
 	}
@@ -115,7 +115,7 @@ public class DBLayer {
 				Class.forName(DRIVER).newInstance();
 				connection = DriverManager.getConnection(DB_URL, new Properties());
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new KeyException("Ошибка создания соединения с базой", e);
 			}
 		}
 		return connection;
