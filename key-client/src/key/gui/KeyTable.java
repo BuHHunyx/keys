@@ -1,5 +1,9 @@
 package key.gui;
 
+import java.util.Collection;
+
+import key.model.KeyData;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -32,18 +36,14 @@ public class KeyTable {
 		table.setLayoutData(layoutData);
 	}
 
-	public void setValues(String key, String md5) {
-		TableItem item = new TableItem(table, SWT.NONE);
-		item.setText(COLUMN_KEY, key);
-		item.setText(COLUMN_MD5, md5);
-//		for(TableColumn column : tableSet.getColumns()) {
-//		column.pack();
-//	}
-	}
-
-	public void reset() {
+	public void setValues(Collection<KeyData> keys) {
 		for (TableItem tableItem : table.getItems()) {
 			tableItem.dispose();
+		}
+		for (KeyData key : keys) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(COLUMN_KEY, key.getKey());
+			item.setText(COLUMN_MD5, key.getHash());
 		}
 	}
 

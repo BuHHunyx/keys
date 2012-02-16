@@ -5,8 +5,8 @@ import java.util.Date;
 
 import key.model.DBLayer;
 import key.model.KeyGenerator;
+import key.model.SetData;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,13 +21,14 @@ import org.eclipse.swt.widgets.Text;
 
 public class NewComposite extends Composite {
 
-	private int num = 0;
-
 	private Combo comboOctet;
 	private Spinner spinnerCount;
 	private Text textComment;
 	private SetTable tableSet;
 	private KeyTable tableKey;
+	private Button buttonSave;
+
+	private SetData setData;
 
 	public NewComposite(Composite parent, int style) {
 		super(parent, style);
@@ -60,6 +61,7 @@ public class NewComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				generate();
+				buttonSave.setEnabled(true);
 			}
 		});
 
@@ -69,15 +71,16 @@ public class NewComposite extends Composite {
 		tableKey = new KeyTable(this);
 		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		button = new Button(this, SWT.PUSH);
-		button.setLayoutData(buttonGridData);
-		button.setText("Сохранить");
-		button.addSelectionListener(new SelectionAdapter() {
+		buttonSave = new Button(this, SWT.PUSH);
+		buttonSave.setLayoutData(buttonGridData);
+		buttonSave.setText("Сохранить");
+		buttonSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				save();
 			}
 		});
+		buttonSave.setEnabled(false);
 	}
 
 	private void generate() {
@@ -85,20 +88,21 @@ public class NewComposite extends Composite {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		calendar.add(Calendar.YEAR, 1);
-		tableSet.setValues(++num, date, textComment.getText(), date, calendar.getTime());
-
-		tableKey.reset();
+		setData = new SetData(date, textComment.getText(), date, calendar.getTime());
+		tableSet.setValues(setData);
 
 		int cnt = Integer.valueOf(spinnerCount.getText());
 		int octet = Integer.valueOf(comboOctet.getText());
 		for (int i = 0; i < cnt; ++i) {
 			String key = KeyGenerator.generateKey(octet);
-			String md5 = DigestUtils.md5Hex(key);
-			tableKey.setValues(key, md5);
+			setData.addKey(key);
 		}
+		tableKey.setValues(setData.getKeys());
 	}
 
 	private void save() {
-		DBLayer.save();
+		int id = DBLayer.save(setData);
+		setData.setId(id);
+		tableSet.setValues(setData);
 	}
 }

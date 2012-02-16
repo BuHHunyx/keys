@@ -1,8 +1,9 @@
 package key.gui;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
+
+import key.model.SetData;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -14,8 +15,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class SetTable {
 
-	private final static DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance(
-			DateFormat.SHORT,
+	private final static DateFormat DATE_FORMAT = DateFormat.getDateInstance(
 			DateFormat.SHORT,
 			new Locale(System.getProperty("user.language")));
 	//new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -69,25 +69,26 @@ public class SetTable {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				listener.selected();
+				listener.selected((SetData)table.getSelection()[0].getData());
 			}
 		});
 	}
 
-	public void setValues(int n, Date date, String comment, Date from, Date to) {
+	public void setValues(SetData setData) {
 		if (columnMode) {
 			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(INDEX_N, Integer.toString(n));
-			item.setText(INDEX_DATE, DATE_FORMAT.format(date));
-			item.setText(INDEX_COMMENT, comment);
-			item.setText(INDEX_FROM, DATE_FORMAT.format(from));
-			item.setText(INDEX_TO, DATE_FORMAT.format(to));
+			item.setText(INDEX_N, Integer.toString(setData.getId()));
+			item.setText(INDEX_DATE, DATE_FORMAT.format(setData.getCreated()));
+			item.setText(INDEX_COMMENT, setData.getComment());
+			item.setText(INDEX_FROM, DATE_FORMAT.format(setData.getFrom()));
+			item.setText(INDEX_TO, DATE_FORMAT.format(setData.getTo()));
+			item.setData(setData);
 		} else {
-			table.getItem(INDEX_N).setText(1, Integer.toString(n));
-			table.getItem(INDEX_DATE).setText(1, DATE_FORMAT.format(date));
-			table.getItem(INDEX_COMMENT).setText(1, comment);
-			table.getItem(INDEX_FROM).setText(1, DATE_FORMAT.format(from));
-			table.getItem(INDEX_TO).setText(1, DATE_FORMAT.format(to));
+			table.getItem(INDEX_N).setText(1, Integer.toString(setData.getId()));
+			table.getItem(INDEX_DATE).setText(1, DATE_FORMAT.format(setData.getCreated()));
+			table.getItem(INDEX_COMMENT).setText(1, setData.getComment());
+			table.getItem(INDEX_FROM).setText(1, DATE_FORMAT.format(setData.getFrom()));
+			table.getItem(INDEX_TO).setText(1, DATE_FORMAT.format(setData.getTo()));
 		}
 	}
 
@@ -101,7 +102,7 @@ public class SetTable {
 
 	public static interface SetSelectionListener {
 
-		void selected();
+		void selected(SetData setData);
 
 	}
 }

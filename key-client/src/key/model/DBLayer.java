@@ -2,7 +2,13 @@ package key.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -12,20 +18,33 @@ public class DBLayer {
 	private final static String DB_URL = "jdbc:derby://localhost:1527/db;create=true";
 
 	private final static String SQL_CREATE_SET = 
-			"CREATE TABLE SETS (" 
-			+ "ID BIGINT NOT NULL,"
-			+ "DATE_CREATED TIMESTAMP," 
-			+ "COMMENT VARCHAR(255)," 
-			+ "DATE_FROM TIMESTAMP," 
-			+ "DATE_TO TIMESTAMP," 
-			+ "PRIMARY KEY (ID))";
+			"CREATE TABLE SETS ( " 
+			+ "ID INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
+			+ "DATE_CREATED DATE, " 
+			+ "COMMENT VARCHAR(255) NOT NULL, " 
+			+ "DATE_FROM DATE, " 
+			+ "DATE_TO DATE)"; 
 
 	private final static String SQL_CREATE_KEY = 
-			"CREATE TABLE KEYS ("
-			+ "ID BIGINT NOT NULL," 
-			+ "SET_ID BIGINT NOT NULL," 
-			+ "HASH VARCHAR(16)," 
-			+ "PRIMARY KEY (ID))";
+			"CREATE TABLE KEYS ( "
+			+ "SET_ID BIGINT NOT NULL, " 
+			+ "HASH VARCHAR(16))"; 
+
+	private final static String SQL_ADD_SET = 
+            "INSERT INTO SETS (DATE_CREATED, COMMENT, DATE_FROM, DATE_TO) "
+                    + "values (?,?,?,?)";
+
+	private final static String SQL_ADD_KEY = 
+            "INSERT INTO KEYS (SET_ID, HASH) "
+                    + "values (?,?)";
+
+    private static final String QUERY_SETS = "SELECT "
+            + "ID, DATE_CREATED, COMMENT, DATE_FROM, DATE_TO "
+            + "FROM SETS";
+
+    private static final String QUERY_KEYS = "SELECT "
+            + "HASH "
+            + "FROM KEYS WHERE SET_ID=";
 
 	private static Connection connection;
 
@@ -34,15 +53,60 @@ public class DBLayer {
 
 	public static final void create() {
 		try {
-			getConnection().createStatement().execute(SQL_CREATE_SET);
-			getConnection().createStatement().execute(SQL_CREATE_KEY);
+			getConnection().createStatement().executeUpdate(SQL_CREATE_SET);
+			getConnection().createStatement().executeUpdate(SQL_CREATE_KEY);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static final String save() {
-		return null;
+	public static final int save(SetData setData) {
+		try {
+			PreparedStatement ps = getConnection().prepareStatement(SQL_ADD_SET, Statement.RETURN_GENERATED_KEYS);
+			ps.setDate(1, new java.sql.Date(setData.getCreated().getTime()));
+			ps.setString(2, setData.getComment());
+			ps.setDate(3, new java.sql.Date(setData.getFrom().getTime()));
+			ps.setDate(4, new java.sql.Date(setData.getTo().getTime()));
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				for (KeyData key : setData.getKeys()) {
+					ps = getConnection().prepareStatement(SQL_ADD_KEY);
+					ps.setInt(1, id);
+					ps.setString(2, key.getKey());
+					ps.executeUpdate();
+				}
+				return id;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return -1;
+	}
+
+	public static final Collection<SetData> load() {
+		List<SetData> sets = new ArrayList<SetData>();
+		try {
+			ResultSet rs = getConnection().createStatement().executeQuery(QUERY_SETS);
+			while (rs.next()) {
+				sets.add(new SetData(
+						rs.getInt(1),
+						rs.getDate(2),
+						rs.getString(3),
+						rs.getDate(4),
+						rs.getDate(5)));
+			}
+			for (SetData setData : sets) {
+				rs = getConnection().createStatement().executeQuery(QUERY_KEYS + setData.getId());
+				while (rs.next()) {
+					setData.addKey(rs.getString(1));
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return sets;
 	}
 
 	private static final Connection getConnection() {

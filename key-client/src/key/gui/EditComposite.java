@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.Date;
 
 import key.model.CsvExport;
+import key.model.DBLayer;
 import key.model.ExportData;
+import key.model.SetData;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,7 +57,8 @@ public class EditComposite extends Composite {
 		tableSet.setLayoutData(gd);
 		tableSet.addSelectionListener(new SetTable.SetSelectionListener() {
 			@Override
-			public void selected() {
+			public void selected(SetData setData) {
+				tableKey.setValues(setData.getKeys());
 				buttonExport.setEnabled(true);
 			}
 		});
@@ -65,8 +67,10 @@ public class EditComposite extends Composite {
 	}
 
 	private void refresh() {
-		tableSet.setValues(1, new Date(), "123", new Date(), new Date());
-		MessageDialog.openWarning(getShell(), null, "UNDER CONSTRUCTION");
+		tableSet.reset();
+		for(SetData setData : DBLayer.load()) {
+			tableSet.setValues(setData);
+		}
 	}
 
 	private void export() {
