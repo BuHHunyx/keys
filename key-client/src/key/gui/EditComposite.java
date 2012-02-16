@@ -1,11 +1,11 @@
 package key.gui;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.Collection;
 
 import key.model.CsvExport;
 import key.model.DBLayer;
-import key.model.ExportData;
+import key.model.KeyData;
 import key.model.SetData;
 
 import org.eclipse.swt.SWT;
@@ -23,6 +23,8 @@ public class EditComposite extends Composite {
 	private Button buttonExport;
 	private SetTable tableSet;
 	private KeyTable tableKey;
+	
+	private SetData selectedSetData;
 
 	public EditComposite(Composite parent, int style) {
 		super(parent, style);
@@ -58,8 +60,10 @@ public class EditComposite extends Composite {
 		tableSet.addSelectionListener(new SetTable.SetSelectionListener() {
 			@Override
 			public void selected(SetData setData) {
-				tableKey.setValues(setData.getKeys());
-				buttonExport.setEnabled(true);
+				selectedSetData = setData;
+				Collection<KeyData> keys = setData.getKeys();
+				tableKey.setValues(keys);
+				buttonExport.setEnabled(!keys.isEmpty());
 			}
 		});
 		tableKey = new KeyTable(this);
@@ -80,10 +84,7 @@ public class EditComposite extends Composite {
         String selected = fd.open();
         if (null != selected) {
     		try {
-				CsvExport.export(selected, new ExportData[] {
-						new ExportData("1234", new Date(), new Date(), false),
-						new ExportData("4321", new Date(), new Date(), true)
-				});
+				CsvExport.export(selected, selectedSetData);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

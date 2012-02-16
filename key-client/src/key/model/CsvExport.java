@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class CsvExport {
@@ -17,14 +18,16 @@ public class CsvExport {
 	private CsvExport() {
 	}
 
-	public static final void export(String filename, ExportData[] exportDatas) throws IOException {
+	public static final void export(String filename, SetData setData) throws IOException {
 		CSVWriter writer = new CSVWriter(new FileWriter(filename), CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER);
-		for (ExportData data : exportDatas) {
+		String from = DATE_FORMAT.format(setData.getFrom());
+		String to = DATE_FORMAT.format(setData.getTo());
+		for (KeyData key : setData.getKeys()) {
 			writer.writeNext(new String[] {
-					data.getMd5(),
-					DATE_FORMAT.format(data.getFrom()),
-					DATE_FORMAT.format(data.getTo()),
-					data.isActive() ? ENABLED : DISABLED
+					key.getKey(),
+					from,
+					to,
+					new Date().before(setData.getTo()) ? ENABLED : DISABLED
 				});
 		}
 		writer.close();
