@@ -21,6 +21,8 @@ public class ClientDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		CTabFolder tab = new CTabFolder(parent, SWT.TOP);
+		tab.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		CTabItem tabItem;
 
 		tabItem = new CTabItem(tab, SWT.NONE);
@@ -33,7 +35,10 @@ public class ClientDialog extends Dialog {
 		tabItem.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/add.gif")));
 		tabItem.setControl(new NewComposite(tab, SWT.NONE));
 
-		tab.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tabItem = new CTabItem(tab, SWT.NONE);
+		tabItem.setText("Настройки");
+		tabItem.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/settings.gif")));
+		tabItem.setControl(new SettingsComposite(tab, SWT.NONE));
 		return tab;
 	}
 
