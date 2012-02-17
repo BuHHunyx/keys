@@ -5,6 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class KeyData {
 
 	private final String key;
+	private String hash;
 
 	public KeyData(String key) {
 		this.key = key;
@@ -15,6 +16,9 @@ public class KeyData {
 	}
 
 	public String getHash() {
-		return DigestUtils.md5Hex(key);
+		if (null == hash) {
+			hash = DigestUtils.md5Hex(key);
+		}
+		return hash;
 	}
 }

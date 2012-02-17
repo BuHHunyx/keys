@@ -40,10 +40,12 @@ public class KeyTable {
 		for (TableItem tableItem : table.getItems()) {
 			tableItem.dispose();
 		}
-		for (KeyData key : keys) {
-			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(COLUMN_KEY, key.getKey());
-			item.setText(COLUMN_MD5, key.getHash());
+		if (null != keys) {
+			for (KeyData key : keys) {
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(COLUMN_KEY, key.getKey());
+				item.setText(COLUMN_MD5, key.getHash());
+			}
 		}
 	}
 

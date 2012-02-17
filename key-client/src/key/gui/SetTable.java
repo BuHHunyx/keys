@@ -37,6 +37,7 @@ public class SetTable {
 	private final boolean columnMode;
 	
 	private Table table;
+	private SetSelectionListener selectionListener;
 
 	public SetTable(Composite parent, boolean columnMode) {
 		this.columnMode = columnMode;
@@ -65,11 +66,12 @@ public class SetTable {
 		table.setLayoutData(layoutData);
 	}
 
-	public void addSelectionListener (final SetSelectionListener listener) {
+	public void addSelectionListener (SetSelectionListener listener) {
+		this.selectionListener = listener;
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				listener.selected((SetData)table.getSelection()[0].getData());
+				selectionListener.selected((SetData)table.getSelection()[0].getData());
 			}
 		});
 	}
@@ -90,6 +92,11 @@ public class SetTable {
 			table.getItem(INDEX_FROM).setText(1, DATE_FORMAT.format(setData.getFrom()));
 			table.getItem(INDEX_TO).setText(1, DATE_FORMAT.format(setData.getTo()));
 		}
+	}
+
+	public void deleteCurrent() {
+		table.getSelection()[0].dispose();
+		selectionListener.selected(null);
 	}
 
 	public void reset() {

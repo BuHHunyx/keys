@@ -28,25 +28,28 @@ public class DBLayer {
 	private final static String SQL_CREATE_KEY = 
 			"CREATE TABLE KEYS ( "
 			+ "SET_ID BIGINT NOT NULL, " 
-			+ "HASH VARCHAR(16))"; 
+			+ "KEY_VALUE VARCHAR(255))"; 
 
 	private final static String SQL_ADD_SET = 
             "INSERT INTO SETS (DATE_CREATED, COMMENT, DATE_FROM, DATE_TO) "
                     + "values (?,?,?,?)";
 
 	private final static String SQL_ADD_KEY = 
-            "INSERT INTO KEYS (SET_ID, HASH) "
+            "INSERT INTO KEYS (SET_ID, KEY_VALUE) "
                     + "values (?,?)";
 
-    private static final String QUERY_SETS = "SELECT "
+    private static final String SQL_GET_SETS = "SELECT "
             + "ID, DATE_CREATED, COMMENT, DATE_FROM, DATE_TO "
             + "FROM SETS";
 
-    private static final String QUERY_KEYS = "SELECT "
-            + "HASH "
+    private static final String SQL_GET_KEYS = "SELECT "
+            + "KEY_VALUE "
             + "FROM KEYS WHERE SET_ID=";
 
-	private static Connection connection;
+    private static final String SQL_DELETE_SET = "DELETE FROM SETS "
+            + "WHERE ID=";
+
+    private static Connection connection;
 
 	private DBLayer() {
 	}
@@ -88,7 +91,7 @@ public class DBLayer {
 	public static final Collection<SetData> load() {
 		List<SetData> sets = new ArrayList<SetData>();
 		try {
-			ResultSet rs = getConnection().createStatement().executeQuery(QUERY_SETS);
+			ResultSet rs = getConnection().createStatement().executeQuery(SQL_GET_SETS);
 			while (rs.next()) {
 				sets.add(new SetData(
 						rs.getInt(1),
@@ -98,7 +101,7 @@ public class DBLayer {
 						rs.getDate(5)));
 			}
 			for (SetData setData : sets) {
-				rs = getConnection().createStatement().executeQuery(QUERY_KEYS + setData.getId());
+				rs = getConnection().createStatement().executeQuery(SQL_GET_KEYS + setData.getId());
 				while (rs.next()) {
 					setData.addKey(rs.getString(1));
 				}
@@ -107,6 +110,14 @@ public class DBLayer {
 			throw new KeyException("Ошибка чтения из базы", e);
 		}
 		return sets;
+	}
+
+	public static final void delete(SetData setData) {
+		try {
+			getConnection().createStatement().executeUpdate(SQL_DELETE_SET + setData.getId());
+		} catch (SQLException e) {
+			throw new KeyException("Ошибка при удалении пачки из базы", e);
+		}
 	}
 
 	private static final Connection getConnection() {
