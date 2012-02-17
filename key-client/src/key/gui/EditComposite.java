@@ -17,16 +17,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Text;
 
 public class EditComposite extends Composite {
 
-	private Button buttonExport;
+	private Text textFilter;
 	private SetTable tableSet;
 	private KeyTable tableKey;
 	private Button buttonDeleteSet;
 	private Button buttonDeleteKey;
+	private Button buttonExport;
 
 	private SetData selectedSetData;
 	private KeyData selectedKeyData;
@@ -36,11 +38,26 @@ public class EditComposite extends Composite {
 
 		setLayout(new GridLayout(3, false));
 
-		GridData buttonGridData = new GridData(SWT.NONE, SWT.NONE, false, false);
+		Group groupFilter = new Group(this, SWT.NONE);
+		groupFilter.setText("Поиск ключей");
+		groupFilter.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+		groupFilter.setLayout(new GridLayout(2, false));
 
-		Button button = new Button(this, SWT.PUSH);
-		button.setLayoutData(buttonGridData);
-		button.setText("Обновить");
+		textFilter = new Text(groupFilter, SWT.BORDER);
+		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+		Button button = new Button(groupFilter, SWT.PUSH);
+		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/search.gif")));
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				filter();
+			}
+		});
+
+		button = new Button(this, SWT.PUSH);
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		button.setText("Показать все");
 		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/refresh.gif")));
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -48,20 +65,6 @@ public class EditComposite extends Composite {
 				refresh();
 			}
 		});
-
-		buttonExport = new Button(this, SWT.PUSH);
-		buttonExport.setLayoutData(buttonGridData);
-		buttonExport.setText("Экспорт...");
-		buttonExport.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/export.gif")));
-		buttonExport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				export();
-			}
-		});
-		buttonExport.setEnabled(false);
-
-		new Label(this, SWT.NONE);
 
 		tableSet = new SetTable(this, true);
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1);
@@ -82,7 +85,7 @@ public class EditComposite extends Composite {
 		});
 
 		tableKey = new KeyTable(this);
-		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 2));
+		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 4));
 		tableKey.addSelectionListener(new KeyTable.KeySelectionListener() {
 			@Override
 			public void selected(KeyData keyData) {
@@ -92,7 +95,7 @@ public class EditComposite extends Composite {
 		});
 
 		buttonDeleteSet = new Button(this, SWT.PUSH);
-		buttonDeleteSet.setLayoutData(buttonGridData);
+		buttonDeleteSet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		buttonDeleteSet.setText("Удаление пачки");
 		buttonDeleteSet.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/delete.gif")));
 		buttonDeleteSet.addSelectionListener(new SelectionAdapter() {
@@ -105,7 +108,7 @@ public class EditComposite extends Composite {
 
 		buttonDeleteKey = new Button(this, SWT.PUSH);
 		buttonDeleteKey.setText("Удаление ключа");
-		buttonDeleteKey.setLayoutData(buttonGridData);
+		buttonDeleteKey.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		buttonDeleteKey.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/delete.gif")));
 		buttonDeleteKey.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -114,6 +117,26 @@ public class EditComposite extends Composite {
 			}
 		});
 		buttonDeleteKey.setEnabled(false);
+
+		buttonExport = new Button(this, SWT.PUSH);
+		buttonExport.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
+		buttonExport.setText("Экспорт пачки…");
+		buttonExport.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/saveas.gif")));
+		buttonExport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				export();
+			}
+		});
+		buttonExport.setEnabled(false);
+
+	}
+
+	private void filter() {
+		tableSet.reset();
+		for(SetData setData : SetData.listFilter(textFilter.getText())) {
+			tableSet.setValues(setData);
+		}
 	}
 
 	private void refresh() {

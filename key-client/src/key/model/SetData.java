@@ -18,6 +18,10 @@ public class SetData {
 		return DBLayer.load();
 	}
 
+	public static final Collection<SetData> listFilter(String filter) {
+		return DBLayer.load(filter);
+	}
+
 	public SetData(Date created, String comment, Date from, Date to) {
 		this(-1, created, comment, from, to);
 	}

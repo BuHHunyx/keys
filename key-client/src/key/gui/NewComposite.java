@@ -9,6 +9,7 @@ import key.model.SetData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -53,6 +54,7 @@ public class NewComposite extends Composite {
 		textComment.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
 		Button button = new Button(this, SWT.PUSH);
+		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/new.gif")));
 		GridData buttonGridData = new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1);
 		button.setLayoutData(buttonGridData);
 		button.setText("Создать");
@@ -75,6 +77,7 @@ public class NewComposite extends Composite {
 		buttonSave = new Button(this, SWT.PUSH);
 		buttonSave.setLayoutData(buttonGridData);
 		buttonSave.setText("Сохранить");
+		buttonSave.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/export.gif")));
 		buttonSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

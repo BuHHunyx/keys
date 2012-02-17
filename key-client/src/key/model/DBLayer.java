@@ -116,6 +116,12 @@ public class DBLayer {
 		return sets;
 	}
 
+	static final Collection<SetData> load(String filter) {
+		List<SetData> sets = new ArrayList<SetData>();
+		// TODO: filter
+		return sets;
+	}
+
 	static final void deleteSet(int setId) {
 		try {
 			getConnection().createStatement().executeUpdate(SQL_DELETE_SET + setId);
