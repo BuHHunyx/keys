@@ -36,16 +36,20 @@ public class NewComposite extends Composite {
 		setLayout(new GridLayout(2, false));
 
 		Label label;
+		
+		GridData gd = new GridData(SWT.NONE, SWT.NONE, false, false); 
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Количество октетов:");
 		comboOctet = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+		comboOctet.setLayoutData(gd);
 		comboOctet.setItems(new String[] {"2", "3", "4"});
 		comboOctet.select(0);
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Количество ключей:");
 		spinnerCount = new Spinner(this, SWT.BORDER);
+		spinnerCount.setLayoutData(gd);
 		spinnerCount.setMinimum(1);
 
 		label = new Label(this, SWT.NONE);
@@ -70,9 +74,9 @@ public class NewComposite extends Composite {
 		tableSet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
 		tableKey = new KeyTable(this);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
-		gd.heightHint = 50;
-		tableKey.setLayoutData(gd);
+		GridData gdKeyTable = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		gdKeyTable.heightHint = 50;
+		tableKey.setLayoutData(gdKeyTable);
 
 		buttonSave = new Button(this, SWT.PUSH);
 		buttonSave.setLayoutData(buttonGridData);
