@@ -49,6 +49,12 @@ public class DBLayer {
     private static final String SQL_DELETE_SET = "DELETE FROM SETS "
             + "WHERE ID=";
 
+    private static final String SQL_DELETE_KEYS = "DELETE FROM KEYS "
+            + "WHERE SET_ID=";
+
+    private static final String SQL_DELETE_KEY = "DELETE FROM KEYS "
+            + "WHERE KEY_VALUE='%s'";
+
     private static Connection connection;
 
 	private DBLayer() {
@@ -63,7 +69,7 @@ public class DBLayer {
 		}
 	}
 
-	public static final int save(SetData setData) {
+	static final int save(SetData setData) {
 		try {
 			PreparedStatement ps = getConnection().prepareStatement(SQL_ADD_SET, Statement.RETURN_GENERATED_KEYS);
 			ps.setDate(1, new java.sql.Date(setData.getCreated().getTime()));
@@ -88,7 +94,7 @@ public class DBLayer {
 		return -1;
 	}
 
-	public static final Collection<SetData> load() {
+	static final Collection<SetData> load() {
 		List<SetData> sets = new ArrayList<SetData>();
 		try {
 			ResultSet rs = getConnection().createStatement().executeQuery(SQL_GET_SETS);
@@ -112,11 +118,20 @@ public class DBLayer {
 		return sets;
 	}
 
-	public static final void delete(SetData setData) {
+	static final void deleteSet(int setId) {
 		try {
-			getConnection().createStatement().executeUpdate(SQL_DELETE_SET + setData.getId());
+			getConnection().createStatement().executeUpdate(SQL_DELETE_SET + setId);
+			getConnection().createStatement().executeUpdate(SQL_DELETE_KEYS + setId);
 		} catch (SQLException e) {
 			throw new KeyException("Ошибка при удалении пачки из базы", e);
+		}
+	}
+
+	static final void deleteKey(String key) {
+		try {
+			getConnection().createStatement().executeUpdate(String.format(SQL_DELETE_KEY, key));
+		} catch (SQLException e) {
+			throw new KeyException("Ошибка при удалении ключа из базы", e);
 		}
 	}
 

@@ -21,4 +21,18 @@ public class KeyData {
 		}
 		return hash;
 	}
+
+//	@Override
+//	public int hashCode() {
+//		return key.hashCode();
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj instanceof KeyData) {
+//			return key.equals(((KeyData)obj).key);
+//		}
+//		return super.equals(obj);
+//	}
+
 }

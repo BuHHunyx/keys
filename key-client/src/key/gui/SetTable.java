@@ -95,8 +95,15 @@ public class SetTable {
 	}
 
 	public void deleteCurrent() {
-		table.getSelection()[0].dispose();
-		selectionListener.selected(null);
+		if (columnMode) {
+			TableItem[] items = table.getSelection();
+			if (items.length > 0) {
+				items[0].dispose();
+				if (null != selectionListener) {
+					selectionListener.selected(null);
+				}
+			}
+		}
 	}
 
 	public void reset() {

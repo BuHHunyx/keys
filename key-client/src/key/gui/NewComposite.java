@@ -3,7 +3,6 @@ package key.gui;
 import java.util.Calendar;
 import java.util.Date;
 
-import key.model.DBLayer;
 import key.model.KeyGenerator;
 import key.model.SetData;
 
@@ -103,8 +102,7 @@ public class NewComposite extends Composite {
 	}
 
 	private void save() {
-		int id = DBLayer.save(setData);
-		setData.setId(id);
+		setData.save();
 		tableSet.setValues(setData);
 	}
 }

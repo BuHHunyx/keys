@@ -14,6 +14,10 @@ public class SetData {
 	private final Date to;
 	private final List<KeyData> keys = new ArrayList<KeyData>();
 
+	public static final Collection<SetData> listAll() {
+		return DBLayer.load();
+	}
+
 	public SetData(Date created, String comment, Date from, Date to) {
 		this(-1, created, comment, from, to);
 	}
@@ -58,4 +62,16 @@ public class SetData {
 		return keys;
 	}
 
+	public void deleteKey(KeyData keyData) {
+		DBLayer.deleteKey(keyData.getKey());
+		keys.remove(keyData);
+	}
+
+	public void save() {
+		setId(DBLayer.save(this));
+	}
+
+	public void delete() {
+		DBLayer.deleteSet(getId());
+	}
 }
