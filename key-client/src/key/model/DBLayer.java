@@ -9,13 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 
 public class DBLayer {
 
 	private final static String DRIVER = "org.apache.derby.jdbc.ClientDriver";
-	private final static String DB_URL = "jdbc:derby://localhost:1527/db;create=true";
 
 	private final static String SQL_CREATE_SET = 
 			"CREATE TABLE SETS ( " 
@@ -23,7 +21,7 @@ public class DBLayer {
 			+ "DATE_CREATED DATE, " 
 			+ "COMMENT VARCHAR(255) NOT NULL, " 
 			+ "DATE_FROM DATE, " 
-			+ "DATE_TO DATE)"; 
+			+ "DATE_TO DATE)";
 
 	private final static String SQL_CREATE_KEY = 
 			"CREATE TABLE KEYS ( "
@@ -139,7 +137,11 @@ public class DBLayer {
 		if (null == connection) {
 			try {
 				Class.forName(DRIVER).newInstance();
-				connection = DriverManager.getConnection(DB_URL, new Properties());
+				String username = KeyProperties.getDbUsername();
+				String password = KeyProperties.getDbPassword();
+				connection = DriverManager.getConnection(KeyProperties.getDbUrl(),
+						username.isEmpty() ? null : username,
+						password.isEmpty() ? null : password);
 			} catch (Exception e) {
 				throw new KeyException("Ошибка создания соединения с базой", e);
 			}
