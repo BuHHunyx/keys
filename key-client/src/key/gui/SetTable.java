@@ -111,6 +111,9 @@ public class SetTable {
 			for (TableItem tableItem : table.getItems()) {
 				tableItem.dispose();
 			}
+			if (null != selectionListener) {
+				selectionListener.selected(null);
+			}
 		}
 	}
 

@@ -40,6 +40,12 @@ public class DBLayer {
             + "ID, DATE_CREATED, COMMENT, DATE_FROM, DATE_TO "
             + "FROM SETS";
 
+    private static final String SQL_FILTER_SETS = "SELECT "
+            + "SETS.ID, SETS.DATE_CREATED, SETS.COMMENT, SETS.DATE_FROM, SETS.DATE_TO, KEYS.KEY_VALUE "
+            + "FROM KEYS "
+            + "INNER JOIN SETS ON ID=KEYS.SET_ID "
+    		+ "WHERE KEYS.KEY_VALUE LIKE '%%%s%%'";
+
     private static final String SQL_GET_KEYS = "SELECT "
             + "KEY_VALUE "
             + "FROM KEYS WHERE SET_ID=";
@@ -118,7 +124,25 @@ public class DBLayer {
 
 	static final Collection<SetData> load(String filter) {
 		List<SetData> sets = new ArrayList<SetData>();
-		// TODO: filter
+		try {
+			ResultSet rs = getConnection().createStatement().executeQuery(String.format(SQL_FILTER_SETS, filter));
+			SetData setData = null;
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				if (null == setData || id != setData.getId()) {
+					setData = new SetData(
+						rs.getInt(1),
+						rs.getDate(2),
+						rs.getString(3),
+						rs.getDate(4),
+						rs.getDate(5));
+					sets.add(setData);
+				}
+				setData.addKey(rs.getString(6));
+			}
+		} catch (SQLException e) {
+			throw new KeyException("Ошибка чтения из базы", e);
+		}
 		return sets;
 	}
 
