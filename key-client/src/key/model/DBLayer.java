@@ -13,15 +13,15 @@ import java.util.List;
 
 public class DBLayer {
 
-	private final static String DRIVER = "org.apache.derby.jdbc.ClientDriver";
+	private final static String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
 	private final static String SQL_CREATE_SET = 
 			"CREATE TABLE SETS ( " 
-			+ "ID INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
-			+ "DATE_CREATED DATE, " 
+			+ "ID INTEGER IDENTITY PRIMARY KEY CLUSTERED, "
+			+ "DATETIME_CREATED DATETIME, " 
 			+ "COMMENT VARCHAR(255) NOT NULL, " 
-			+ "DATE_FROM DATE, " 
-			+ "DATE_TO DATE)";
+			+ "DATETIME_FROM DATETIME, " 
+			+ "DATETIME_TO DATETIME)";
 
 	private final static String SQL_CREATE_KEY = 
 			"CREATE TABLE KEYS ( "
@@ -29,7 +29,7 @@ public class DBLayer {
 			+ "KEY_VALUE VARCHAR(255))"; 
 
 	private final static String SQL_ADD_SET = 
-            "INSERT INTO SETS (DATE_CREATED, COMMENT, DATE_FROM, DATE_TO) "
+            "INSERT INTO SETS (DATETIME_CREATED, COMMENT, DATETIME_FROM, DATETIME_TO) "
                     + "values (?,?,?,?)";
 
 	private final static String SQL_ADD_KEY = 
@@ -37,11 +37,11 @@ public class DBLayer {
                     + "values (?,?)";
 
     private static final String SQL_GET_SETS = "SELECT "
-            + "ID, DATE_CREATED, COMMENT, DATE_FROM, DATE_TO "
+            + "ID, DATETIME_CREATED, COMMENT, DATETIME_FROM, DATETIME_TO "
             + "FROM SETS";
 
     private static final String SQL_FILTER_SETS = "SELECT "
-            + "SETS.ID, SETS.DATE_CREATED, SETS.COMMENT, SETS.DATE_FROM, SETS.DATE_TO, KEYS.KEY_VALUE "
+            + "SETS.ID, SETS.DATETIME_CREATED, SETS.COMMENT, SETS.DATETIME_FROM, SETS.DATETIME_TO, KEYS.KEY_VALUE "
             + "FROM KEYS "
             + "INNER JOIN SETS ON ID=KEYS.SET_ID "
     		+ "WHERE KEYS.KEY_VALUE LIKE '%%%s%%'";
