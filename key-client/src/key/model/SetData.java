@@ -66,7 +66,7 @@ public class SetData {
 		keys.add(new KeyData(key));
 	}
 
-	public Collection<KeyData> getKeys() {
+	public List<KeyData> getKeys() {
 		return keys;
 	}
 

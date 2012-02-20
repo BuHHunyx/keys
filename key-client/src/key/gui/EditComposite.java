@@ -1,7 +1,7 @@
 package key.gui;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 import key.model.CsvExport;
 import key.model.KeyData;
@@ -74,7 +74,7 @@ public class EditComposite extends Composite {
 			@Override
 			public void selected(SetData setData) {
 				selectedSetData = setData;
-				Collection<KeyData> keys = null;
+				List<KeyData> keys = null;
 				if (null != setData) {
 					keys = setData.getKeys();
 				}
