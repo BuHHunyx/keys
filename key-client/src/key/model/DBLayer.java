@@ -50,6 +50,10 @@ public class DBLayer {
             + "KEY_VALUE "
             + "FROM KEYS WHERE SET_ID=";
 
+    private static final String SQL_GET_KEY = "SELECT "
+            + "SET_ID "
+            + "FROM KEYS WHERE KEY_VALUE='%s'";
+
     private static final String SQL_DELETE_SET = "DELETE FROM SETS "
             + "WHERE ID=";
 
@@ -144,6 +148,15 @@ public class DBLayer {
 			throw new KeyException("Ошибка чтения из базы", e);
 		}
 		return sets;
+	}
+
+	static final boolean isKeyExists(String key) {
+		try {
+			ResultSet rs = getConnection().createStatement().executeQuery(String.format(SQL_GET_KEY, key));
+			return rs.next();
+		} catch (SQLException e) {
+			throw new KeyException("Ошибка чтения из базы", e);
+		}
 	}
 
 	static final void deleteSet(int setId) {

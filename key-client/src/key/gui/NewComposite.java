@@ -102,7 +102,10 @@ public class NewComposite extends Composite {
 		int cnt = Integer.valueOf(spinnerCount.getText());
 		int octet = Integer.valueOf(comboOctet.getText());
 		for (int i = 0; i < cnt; ++i) {
-			String key = KeyGenerator.generateKey(octet);
+			String key;
+			do {
+				key = KeyGenerator.generateKey(octet);
+			} while (setData.isKeyExists(key));
 			setData.addKey(key);
 		}
 		tableKey.setValues(setData.getKeys());

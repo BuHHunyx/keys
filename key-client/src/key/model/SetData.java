@@ -58,6 +58,10 @@ public class SetData {
 		return to;
 	}
 
+	public boolean isKeyExists(String key) {
+		return keys.contains(new KeyData(key)) || DBLayer.isKeyExists(key);
+	}
+
 	public void addKey(String key) {
 		keys.add(new KeyData(key));
 	}
