@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class SettingsComposite extends Composite {
@@ -36,25 +37,33 @@ public class SettingsComposite extends Composite {
 
 		Group groupDB = new Group(this, SWT.NONE);
 		groupDB.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-		groupDB.setLayout(new GridLayout());
+		groupDB.setLayout(new GridLayout(2, false));
 		groupDB.setText("Настройки соединения с базой данных");
 
+		Label label;
+
+		label = new Label(groupDB, SWT.NONE);
+		label.setText("URL-адрес подключения");
 		textDbUrl = new Text(groupDB, SWT.BORDER);
 		textDbUrl.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbUrl.setText(KeyProperties.getDbUrl());
 
+		label = new Label(groupDB, SWT.NONE);
+		label.setText("Пользователь");
 		textDbUsername = new Text(groupDB, SWT.BORDER);
 		textDbUsername.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbUsername.setText(KeyProperties.getDbUsername());
 
-		textDbPassword = new Text(groupDB, SWT.BORDER);
+		label = new Label(groupDB, SWT.NONE);
+		label.setText("Пароль");
+		textDbPassword = new Text(groupDB, SWT.BORDER | SWT.PASSWORD);
 		textDbPassword.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbPassword.setText(KeyProperties.getDbPassword());
 
 		button = new Button(groupDB, SWT.PUSH);
 		button.setText("Сохранить");
 		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/save.gif")));
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.NONE, false, false));
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.NONE, false, false, 2, 1));
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
