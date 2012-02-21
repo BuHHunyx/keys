@@ -108,6 +108,7 @@ public class NewComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				save();
+				buttonSave.setEnabled(false);
 			}
 		});
 		buttonSave.setEnabled(false);
