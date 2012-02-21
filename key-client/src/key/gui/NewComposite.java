@@ -3,6 +3,7 @@ package key.gui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import key.model.KeyException;
 import key.model.KeyGenerator;
@@ -26,6 +27,8 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 public class NewComposite extends Composite {
+
+	private static final Pattern PATTERN_ALPHANUM = Pattern.compile("\\p{Alnum}");
 
 	private Spinner spinnerOctet;
 	private Spinner spinnerCount;
@@ -67,9 +70,14 @@ public class NewComposite extends Composite {
 		textOctet.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(VerifyEvent event) {
-				String text = ((Text) event.widget).getText();
-				if (event.text.length() + text.length() > 6) {
-					event.doit = false;
+				int len = event.text.length();
+				if (len > 0) { // non-control char
+					String text = ((Text) event.widget).getText();
+					if ((text.length() + len > 6) || !PATTERN_ALPHANUM.matcher(event.text).matches()) {
+						event.doit = false;
+					} else {
+						event.text = event.text.toUpperCase();
+					}
 				}
 			}
 		});
