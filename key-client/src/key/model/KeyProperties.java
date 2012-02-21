@@ -9,7 +9,8 @@ public class KeyProperties {
 
 	private final static String FILENAME = "key-client.properties";
 
-	private final static String DB_URL = "db.url";
+	private final static String DB_HOST = "db.host";
+	private final static String DB_PORT = "db.port";
 	private final static String DB_USERNAME = "db.username";
 	private final static String DB_PASSWORD = "db.password";
 
@@ -18,8 +19,12 @@ public class KeyProperties {
 	private KeyProperties() {
 	}
 
-	public static final String getDbUrl() {
-		return getProperties().getProperty(DB_URL);
+	public static final String getDbHost() {
+		return getProperties().getProperty(DB_HOST);
+	}
+
+	public static final String getDbPort() {
+		return getProperties().getProperty(DB_PORT);
 	}
 
 	public static final String getDbUsername() {
@@ -30,8 +35,9 @@ public class KeyProperties {
 		return getProperties().getProperty(DB_PASSWORD);
 	}
 
-	public static final void saveDbProperties(String dbUrl, String dbUsername, String dbPassword) {
-		getProperties().setProperty(DB_URL, dbUrl);
+	public static final void saveDbProperties(String dbHost, String dbPort, String dbUsername, String dbPassword) {
+		getProperties().setProperty(DB_HOST, dbHost);
+		getProperties().setProperty(DB_PORT, dbPort);
 		getProperties().setProperty(DB_USERNAME, dbUsername);
 		getProperties().setProperty(DB_PASSWORD, dbPassword);
 		FileOutputStream fos = null;

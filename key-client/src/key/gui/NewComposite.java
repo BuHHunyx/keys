@@ -1,19 +1,25 @@
 package key.gui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 
+import key.model.KeyException;
 import key.model.KeyGenerator;
 import key.model.SetData;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
@@ -21,8 +27,9 @@ import org.eclipse.swt.widgets.Text;
 
 public class NewComposite extends Composite {
 
-	private Combo comboOctet;
+	private Spinner spinnerOctet;
 	private Spinner spinnerCount;
+	private Text textOctet;
 	private Text textComment;
 	private SetTable tableSet;
 	private KeyTable tableKey;
@@ -41,16 +48,31 @@ public class NewComposite extends Composite {
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Количество октетов:");
-		comboOctet = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboOctet.setLayoutData(gd);
-		comboOctet.setItems(new String[] {"2", "3", "4"});
-		comboOctet.select(0);
+		spinnerOctet = new Spinner(this, SWT.BORDER);
+		spinnerOctet.setLayoutData(gd);
+		spinnerOctet.setMinimum(2);
+		spinnerOctet.setMaximum(8);
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Количество ключей:");
 		spinnerCount = new Spinner(this, SWT.BORDER);
 		spinnerCount.setLayoutData(gd);
 		spinnerCount.setMinimum(1);
+		spinnerCount.setMaximum(40000);
+
+		label = new Label(this, SWT.NONE);
+		label.setText("Настраиваемый октет:");
+		textOctet = new Text(this, SWT.BORDER);
+		textOctet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		textOctet.addVerifyListener(new VerifyListener() {
+			@Override
+			public void verifyText(VerifyEvent event) {
+				String text = ((Text) event.widget).getText();
+				if (event.text.length() + text.length() > 6) {
+					event.doit = false;
+				}
+			}
+		});
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Комментарий:");
@@ -64,7 +86,7 @@ public class NewComposite extends Composite {
 		button.setText("Создать");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent event) {
 				generate();
 				buttonSave.setEnabled(true);
 			}
@@ -99,14 +121,28 @@ public class NewComposite extends Composite {
 		setData = new SetData(date, textComment.getText(), date, calendar.getTime());
 		tableSet.setValues(setData);
 
-		int cnt = Integer.valueOf(spinnerCount.getText());
-		int octet = Integer.valueOf(comboOctet.getText());
-		for (int i = 0; i < cnt; ++i) {
-			String key;
-			do {
-				key = KeyGenerator.generateKey(octet);
-			} while (setData.isKeyExists(key));
-			setData.addKey(key);
+		final int octet = spinnerOctet.getSelection();
+		final String octetValue = textOctet.getText();
+		final int keys = spinnerCount.getSelection();
+		try {
+			new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
+					monitor.beginTask("Генерация ключей…", keys);
+					for (int i = 0; i < keys; ++i) {
+						String key;
+						do {
+							key = KeyGenerator.generateKey(octetValue, octet);
+						} while (setData.isKeyExists(key));
+						setData.addKey(key);
+						monitor.worked(1);
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			throw new KeyException("Ошибка при генерации ключей", e.getCause());
+		} catch (InterruptedException e) {
 		}
 		tableKey.setValues(setData.getKeys());
 	}

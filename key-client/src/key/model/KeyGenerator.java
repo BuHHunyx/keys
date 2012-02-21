@@ -10,15 +10,18 @@ public class KeyGenerator {
 	private KeyGenerator() {
 	}
 
-	public static final String generateKey(int octet) {
-		String result = "XXXX";
-		for (int i = 0; i < (octet - 1); ++i) {
-			result += '-';
-			for(int j = 0; j < 4; ++j) {
-				result += SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()));
+	public static final String generateKey(String octetValue, int octet) {
+		String result = "";
+		for (int i = 0; i < (octet * 4); ++i) {
+			if (((i % 4) == 0) && (i > 0)) {
+				result += '-';
 			}
+			result += (i < octetValue.length()) ? octetValue.charAt(i) : getRandomCharacter();
 		}
 		return result;
 	}
 
+	private static final char getRandomCharacter() {
+		return SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()));
+	}
 }

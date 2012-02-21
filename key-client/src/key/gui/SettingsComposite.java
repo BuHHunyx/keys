@@ -13,11 +13,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 public class SettingsComposite extends Composite {
 
-	private Text textDbUrl;
+	private Text textDbHost;
+	private Spinner textDbPort;
 	private Text textDbUsername;
 	private Text textDbPassword;
 
@@ -43,10 +45,18 @@ public class SettingsComposite extends Composite {
 		Label label;
 
 		label = new Label(groupDB, SWT.NONE);
-		label.setText("URL-адрес подключения");
-		textDbUrl = new Text(groupDB, SWT.BORDER);
-		textDbUrl.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-		textDbUrl.setText(KeyProperties.getDbUrl());
+		label.setText("Хост");
+		textDbHost = new Text(groupDB, SWT.BORDER);
+		textDbHost.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		textDbHost.setText(KeyProperties.getDbHost());
+
+		label = new Label(groupDB, SWT.NONE);
+		label.setText("Порт");
+		textDbPort = new Spinner(groupDB, SWT.BORDER);
+		textDbPort.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		textDbPort.setMinimum(1000);
+		textDbPort.setMaximum(65535);
+		textDbPort.setSelection(Integer.valueOf(KeyProperties.getDbPort()));
 
 		label = new Label(groupDB, SWT.NONE);
 		label.setText("Пользователь");
@@ -77,6 +87,6 @@ public class SettingsComposite extends Composite {
 	}
 
 	private void save() {
-		KeyProperties.saveDbProperties(textDbUrl.getText(), textDbUsername.getText(), textDbPassword.getText());
+		KeyProperties.saveDbProperties(textDbHost.getText(), textDbPort.getText(), textDbUsername.getText(), textDbPassword.getText());
 	}
 }
