@@ -9,6 +9,7 @@ import key.model.KeyException;
 import key.model.SetData;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -35,12 +36,11 @@ public class EditComposite extends Composite {
 
 	public EditComposite(Composite parent, int style) {
 		super(parent, style);
-
-		setLayout(new GridLayout(3, false));
+		setLayout(new GridLayout(2, false));
 
 		Group groupFilter = new Group(this, SWT.NONE);
 		groupFilter.setText("Поиск ключей");
-		groupFilter.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+		groupFilter.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		groupFilter.setLayout(new GridLayout(2, false));
 
 		textFilter = new Text(groupFilter, SWT.BORDER);
@@ -66,10 +66,10 @@ public class EditComposite extends Composite {
 			}
 		});
 
-		tableSet = new SetTable(this, true);
-		GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1);
-		gd.heightHint = 50;
-		tableSet.setLayoutData(gd);
+		SashForm sash = new SashForm(this, SWT.VERTICAL);
+		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+		tableSet = new SetTable(sash, true);
 		tableSet.addSelectionListener(new SetTable.SetSelectionListener() {
 			@Override
 			public void selected(SetData setData) {
@@ -84,8 +84,12 @@ public class EditComposite extends Composite {
 			}
 		});
 
-		tableKey = new KeyTable(this);
-		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 4));
+		Composite keyComposite = new Composite(sash, SWT.NONE);
+		GridLayout gl = new GridLayout(2, false);
+		gl.marginWidth = 0;
+		keyComposite.setLayout(gl);
+		tableKey = new KeyTable(keyComposite);
+		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
 		tableKey.addSelectionListener(new KeyTable.KeySelectionListener() {
 			@Override
 			public void selected(KeyData keyData) {
@@ -94,7 +98,7 @@ public class EditComposite extends Composite {
 			}
 		});
 
-		buttonDeleteSet = new Button(this, SWT.PUSH);
+		buttonDeleteSet = new Button(keyComposite, SWT.PUSH);
 		buttonDeleteSet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		buttonDeleteSet.setText("Удаление пачки");
 		buttonDeleteSet.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/delete.gif")));
@@ -106,7 +110,7 @@ public class EditComposite extends Composite {
 		});
 		buttonDeleteSet.setEnabled(false);
 
-		buttonDeleteKey = new Button(this, SWT.PUSH);
+		buttonDeleteKey = new Button(keyComposite, SWT.PUSH);
 		buttonDeleteKey.setText("Удаление ключа");
 		buttonDeleteKey.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		buttonDeleteKey.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/delete.gif")));
@@ -118,7 +122,7 @@ public class EditComposite extends Composite {
 		});
 		buttonDeleteKey.setEnabled(false);
 
-		buttonExport = new Button(this, SWT.PUSH);
+		buttonExport = new Button(keyComposite, SWT.PUSH);
 		buttonExport.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
 		buttonExport.setText("Экспорт пачки…");
 		buttonExport.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/saveas.gif")));

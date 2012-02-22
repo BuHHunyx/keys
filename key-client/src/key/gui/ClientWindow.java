@@ -25,7 +25,7 @@ public class ClientWindow extends Window implements Window.IExceptionHandler {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		CTabFolder tab = new CTabFolder(parent, SWT.TOP);
+		CTabFolder tab = new CTabFolder(parent, SWT.TOP | SWT.BORDER);
 		tab.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		CTabItem tabItem;
