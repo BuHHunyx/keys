@@ -28,7 +28,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class NewComposite extends Composite {
 
-	private static final Pattern PATTERN_ALPHANUM = Pattern.compile("\\p{Alnum}");
+	private static final Pattern PATTERN_ALPHANUM = Pattern.compile("\\p{Alnum}+");
+	private static final int CUSTOM_OCTET_LENGTH = 6;
 
 	private Spinner spinnerOctet;
 	private Spinner spinnerCount;
@@ -71,9 +72,12 @@ public class NewComposite extends Composite {
 			@Override
 			public void verifyText(VerifyEvent event) {
 				int len = event.text.length();
-				if (len > 0) { // non-control char
-					String text = ((Text) event.widget).getText();
-					if ((text.length() + len > 6) || !PATTERN_ALPHANUM.matcher(event.text).matches()) {
+				if (len > 0) {
+					int allowed = CUSTOM_OCTET_LENGTH - ((Text) event.widget).getText().length();
+					if (len > allowed) {
+						event.text = event.text.substring(0, allowed);
+					}
+					if (!PATTERN_ALPHANUM.matcher(event.text).matches()) {
 						event.doit = false;
 					} else {
 						event.text = event.text.toUpperCase();
