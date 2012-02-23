@@ -63,7 +63,7 @@ public class SettingsComposite extends Composite {
 
 		label = new Label(groupDB, SWT.NONE);
 		label.setText("База данных");
-		textDbDatabase = new Text(groupDB, SWT.BORDER | SWT.PASSWORD);
+		textDbDatabase = new Text(groupDB, SWT.BORDER);
 		textDbDatabase.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbDatabase.setText(KeyProperties.getDbDatabase());
 
