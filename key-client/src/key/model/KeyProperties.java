@@ -13,6 +13,7 @@ public class KeyProperties {
 	private final static String DB_PORT = "db.port";
 	private final static String DB_USERNAME = "db.username";
 	private final static String DB_PASSWORD = "db.password";
+	private final static String DB_DATABASE = "db.database";
 
 	private final static Properties properties = new Properties();
 
@@ -35,11 +36,16 @@ public class KeyProperties {
 		return getProperties().getProperty(DB_PASSWORD);
 	}
 
-	public static final void saveDbProperties(String dbHost, String dbPort, String dbUsername, String dbPassword) {
+	public static final String getDbDatabase() {
+		return getProperties().getProperty(DB_DATABASE);
+	}
+
+	public static final void saveDbProperties(String dbHost, String dbPort, String dbUsername, String dbPassword, String dbDatabase) {
 		getProperties().setProperty(DB_HOST, dbHost);
 		getProperties().setProperty(DB_PORT, dbPort);
 		getProperties().setProperty(DB_USERNAME, dbUsername);
 		getProperties().setProperty(DB_PASSWORD, dbPassword);
+		getProperties().setProperty(DB_DATABASE, dbDatabase);
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(FILENAME); 

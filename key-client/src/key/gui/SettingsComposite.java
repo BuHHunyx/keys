@@ -22,6 +22,7 @@ public class SettingsComposite extends Composite {
 	private Spinner textDbPort;
 	private Text textDbUsername;
 	private Text textDbPassword;
+	private Text textDbDatabase;
 
 	public SettingsComposite(Composite parent, int style) {
 		super(parent, style);
@@ -70,6 +71,12 @@ public class SettingsComposite extends Composite {
 		textDbPassword.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbPassword.setText(KeyProperties.getDbPassword());
 
+		label = new Label(groupDB, SWT.NONE);
+		label.setText("База данных");
+		textDbDatabase = new Text(groupDB, SWT.BORDER | SWT.PASSWORD);
+		textDbDatabase.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		textDbDatabase.setText(KeyProperties.getDbDatabase());
+
 		button = new Button(groupDB, SWT.PUSH);
 		button.setText("Сохранить");
 		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/save.gif")));
@@ -87,6 +94,11 @@ public class SettingsComposite extends Composite {
 	}
 
 	private void save() {
-		KeyProperties.saveDbProperties(textDbHost.getText(), textDbPort.getText(), textDbUsername.getText(), textDbPassword.getText());
+		KeyProperties.saveDbProperties(
+				textDbHost.getText(),
+				textDbPort.getText(),
+				textDbUsername.getText(),
+				textDbPassword.getText(),
+				textDbDatabase.getText());
 	}
 }
