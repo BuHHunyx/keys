@@ -10,7 +10,6 @@ public class KeyProperties {
 	private final static String FILENAME = "key-client.properties";
 
 	private final static String DB_HOST = "db.host";
-	private final static String DB_PORT = "db.port";
 	private final static String DB_USERNAME = "db.username";
 	private final static String DB_PASSWORD = "db.password";
 	private final static String DB_DATABASE = "db.database";
@@ -22,10 +21,6 @@ public class KeyProperties {
 
 	public static final String getDbHost() {
 		return getProperties().getProperty(DB_HOST);
-	}
-
-	public static final String getDbPort() {
-		return getProperties().getProperty(DB_PORT);
 	}
 
 	public static final String getDbUsername() {
@@ -40,9 +35,8 @@ public class KeyProperties {
 		return getProperties().getProperty(DB_DATABASE);
 	}
 
-	public static final void saveDbProperties(String dbHost, String dbPort, String dbUsername, String dbPassword, String dbDatabase) {
+	public static final void saveDbProperties(String dbHost, String dbUsername, String dbPassword, String dbDatabase) {
 		getProperties().setProperty(DB_HOST, dbHost);
-		getProperties().setProperty(DB_PORT, dbPort);
 		getProperties().setProperty(DB_USERNAME, dbUsername);
 		getProperties().setProperty(DB_PASSWORD, dbPassword);
 		getProperties().setProperty(DB_DATABASE, dbDatabase);

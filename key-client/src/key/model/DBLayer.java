@@ -14,7 +14,7 @@ import java.util.List;
 public class DBLayer {
 
 	private final static String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	private final static String DB_URL_TEMPLATE = "jdbc:sqlserver://%s:%s;databaseName=%s;";
+	private final static String DB_URL_TEMPLATE = "jdbc:sqlserver://%s;databaseName=%s;";
 
 	private final static String SQL_CREATE_SET = 
 			"CREATE TABLE SETS ( " 
@@ -184,7 +184,7 @@ public class DBLayer {
 				String username = KeyProperties.getDbUsername();
 				String password = KeyProperties.getDbPassword();
 				connection = DriverManager.getConnection(
-						String.format(DB_URL_TEMPLATE, KeyProperties.getDbHost(), KeyProperties.getDbPort(), KeyProperties.getDbDatabase()),
+						String.format(DB_URL_TEMPLATE, KeyProperties.getDbHost(), KeyProperties.getDbDatabase()),
 						username.isEmpty() ? null : username,
 						password.isEmpty() ? null : password);
 			} catch (Exception e) {

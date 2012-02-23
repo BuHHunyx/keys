@@ -13,13 +13,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
 public class SettingsComposite extends Composite {
 
 	private Text textDbHost;
-	private Spinner textDbPort;
 	private Text textDbUsername;
 	private Text textDbPassword;
 	private Text textDbDatabase;
@@ -50,14 +48,6 @@ public class SettingsComposite extends Composite {
 		textDbHost = new Text(groupDB, SWT.BORDER);
 		textDbHost.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textDbHost.setText(KeyProperties.getDbHost());
-
-		label = new Label(groupDB, SWT.NONE);
-		label.setText("Порт");
-		textDbPort = new Spinner(groupDB, SWT.BORDER);
-		textDbPort.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-		textDbPort.setMinimum(1000);
-		textDbPort.setMaximum(65535);
-		textDbPort.setSelection(Integer.valueOf(KeyProperties.getDbPort()));
 
 		label = new Label(groupDB, SWT.NONE);
 		label.setText("Пользователь");
@@ -96,7 +86,6 @@ public class SettingsComposite extends Composite {
 	private void save() {
 		KeyProperties.saveDbProperties(
 				textDbHost.getText(),
-				textDbPort.getText(),
 				textDbUsername.getText(),
 				textDbPassword.getText(),
 				textDbDatabase.getText());
