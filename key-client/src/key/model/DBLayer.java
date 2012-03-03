@@ -13,7 +13,6 @@ import java.util.List;
 
 public class DBLayer {
 
-	private final static String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private final static String DB_URL_TEMPLATE = "jdbc:sqlserver://%s;databaseName=%s;";
 
 	private final static String SQL_CREATE_SET = 
@@ -180,7 +179,6 @@ public class DBLayer {
 	private static final Connection getConnection() {
 		if (null == connection) {
 			try {
-				Class.forName(DRIVER).newInstance();
 				String username = KeyProperties.getDbUsername();
 				String password = KeyProperties.getDbPassword();
 				connection = DriverManager.getConnection(
