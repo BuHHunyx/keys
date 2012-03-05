@@ -20,7 +20,6 @@ public class SettingsComposite extends Composite {
 	private Text textDbHost;
 	private Text textDbUsername;
 	private Text textDbPassword;
-	private Text textDbInstance;
 	private Text textDbDatabase;
 
 	public SettingsComposite(Composite parent, int style) {
@@ -63,12 +62,6 @@ public class SettingsComposite extends Composite {
 		textDbPassword.setText(KeyProperties.getDbPassword());
 
 		label = new Label(groupDB, SWT.NONE);
-		label.setText("Named Instance");
-		textDbInstance = new Text(groupDB, SWT.BORDER);
-		textDbInstance.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-		textDbInstance.setText(KeyProperties.getDbInstance());
-
-		label = new Label(groupDB, SWT.NONE);
 		label.setText("База данных");
 		textDbDatabase = new Text(groupDB, SWT.BORDER);
 		textDbDatabase.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
@@ -95,7 +88,6 @@ public class SettingsComposite extends Composite {
 				textDbHost.getText(),
 				textDbUsername.getText(),
 				textDbPassword.getText(),
-				textDbInstance.getText(),
 				textDbDatabase.getText());
 	}
 }
