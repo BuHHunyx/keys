@@ -5,7 +5,7 @@ import java.util.Random;
 public class KeyGenerator {
 
 	private final static Random RANDOM = new Random();
-	private final static String SYMBOLS = "ABCDEFGHJKLMNPQRSTUVWXYZ1234567890";
+	private final static String SYMBOLS = "1234567890";
 
 	private KeyGenerator() {
 	}
