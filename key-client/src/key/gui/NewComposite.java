@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -35,6 +36,8 @@ public class NewComposite extends Composite {
 	private Spinner spinnerCount;
 	private Text textOctet;
 	private Text textComment;
+	private DateTime dtFrom;
+	private DateTime dtTo;
 	private SetTable tableSet;
 	private KeyTable tableKey;
 	private Button buttonSave;
@@ -46,26 +49,21 @@ public class NewComposite extends Composite {
 
 		setLayout(new GridLayout(2, false));
 
-		Label label;
-		
 		GridData gd = new GridData(SWT.NONE, SWT.NONE, false, false); 
 
-		label = new Label(this, SWT.NONE);
-		label.setText("Количество октетов:");
+		new Label(this, SWT.NONE).setText("Количество октетов:");
 		spinnerOctet = new Spinner(this, SWT.BORDER);
 		spinnerOctet.setLayoutData(gd);
 		spinnerOctet.setMinimum(2);
 		spinnerOctet.setMaximum(8);
 
-		label = new Label(this, SWT.NONE);
-		label.setText("Количество ключей:");
+		new Label(this, SWT.NONE).setText("Количество ключей:");
 		spinnerCount = new Spinner(this, SWT.BORDER);
 		spinnerCount.setLayoutData(gd);
 		spinnerCount.setMinimum(1);
 		spinnerCount.setMaximum(20000);
 
-		label = new Label(this, SWT.NONE);
-		label.setText("Настраиваемый октет:");
+		new Label(this, SWT.NONE).setText("Настраиваемый октет:");
 		textOctet = new Text(this, SWT.BORDER);
 		textOctet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		textOctet.addVerifyListener(new VerifyListener() {
@@ -86,10 +84,19 @@ public class NewComposite extends Composite {
 			}
 		});
 
-		label = new Label(this, SWT.NONE);
-		label.setText("Комментарий:");
+		new Label(this, SWT.NONE).setText("Комментарий:");
 		textComment = new Text(this, SWT.BORDER);
 		textComment.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+
+		new Label(this, SWT.NONE).setText("Начало действия ключа:");
+		dtFrom = new DateTime(this, SWT.BORDER | SWT.DATE);
+		Calendar calendar = Calendar.getInstance();
+		dtFrom.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+		new Label(this, SWT.NONE).setText("Окончание действия ключа:");
+		dtTo = new DateTime(this, SWT.BORDER | SWT.DATE);
+		calendar.add(Calendar.YEAR, 1);
+		dtTo.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
 		Button button = new Button(this, SWT.PUSH);
 		button.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/new.gif")));
@@ -127,11 +134,12 @@ public class NewComposite extends Composite {
 	}
 
 	private void generate() {
-		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(Calendar.YEAR, 1);
-		setData = new SetData(date, textComment.getText(), date, calendar.getTime());
+		calendar.set(dtFrom.getYear(), dtFrom.getMonth(), dtFrom.getDay());
+		Date dateFrom = calendar.getTime();
+		calendar.set(dtTo.getYear(), dtTo.getMonth(), dtTo.getDay());
+		Date dateTo = calendar.getTime();
+		setData = new SetData(new Date(), textComment.getText(), dateFrom, dateTo);
 		tableSet.setValues(setData);
 
 		final int octet = spinnerOctet.getSelection();
