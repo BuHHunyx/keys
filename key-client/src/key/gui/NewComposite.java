@@ -62,7 +62,7 @@ public class NewComposite extends Composite {
 		spinnerCount = new Spinner(this, SWT.BORDER);
 		spinnerCount.setLayoutData(gd);
 		spinnerCount.setMinimum(1);
-		spinnerCount.setMaximum(40000);
+		spinnerCount.setMaximum(20000);
 
 		label = new Label(this, SWT.NONE);
 		label.setText("Настраиваемый октет:");
