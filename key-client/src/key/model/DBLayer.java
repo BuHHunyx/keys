@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DBLayer {
 
-	private final static String DB_URL_TEMPLATE = "jdbc:sqlserver://%s;databaseName='%s';";
+	private final static String DB_URL_TEMPLATE = "jdbc:sqlserver://%s;databaseName=%s;";
 
 	private final static String SQL_CREATE_SET = 
 			"CREATE TABLE SETS ( " 
