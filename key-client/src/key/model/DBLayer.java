@@ -33,9 +33,16 @@ public class DBLayer {
             "INSERT INTO SETS (DATETIME_CREATED, COMMENT, DATETIME_FROM, DATETIME_TO) "
                     + "values (?,?,?,?)";
 
-	private final static String SQL_ADD_KEY = 
-            "INSERT INTO KEYS (SET_ID, KEY_VALUE) "
-                    + "values (?,?)";
+    private static PreparedStatement psAddKey;
+    private static void dbAddKey(int setId, String key) throws SQLException {
+    	if (null == psAddKey) {
+    		psAddKey = getConnection().prepareStatement(
+    				"INSERT INTO KEYS (SET_ID, KEY_VALUE) values (?,?)");
+    	}
+    	psAddKey.setInt(1, setId);
+    	psAddKey.setString(2, key);
+    	psAddKey.executeUpdate();
+    }
 
     private static final String SQL_GET_SETS = "SELECT "
             + "ID, DATETIME_CREATED, COMMENT, DATETIME_FROM, DATETIME_TO "
@@ -47,17 +54,36 @@ public class DBLayer {
             + "INNER JOIN SETS ON ID=KEYS.SET_ID "
     		+ "WHERE KEYS.KEY_VALUE LIKE '%%%s%%'";
 
-    private static final String SQL_GET_KEYS = "SELECT "
-            + "KEY_VALUE, ACTIVE "
-            + "FROM KEYS WHERE SET_ID=";
+    private static PreparedStatement psGetKeys;
+    private static ResultSet dbGetKeys(int setId) throws SQLException {
+    	if (null == psGetKeys) {
+    		psGetKeys = getConnection().prepareStatement(
+    				"SELECT KEY_VALUE, ACTIVE FROM KEYS WHERE SET_ID=?");
+    	}
+    	psGetKeys.setInt(1, setId);
+    	return psGetKeys.executeQuery();
+    }
 
-    private static final String SQL_GET_KEY = "SELECT "
-            + "SET_ID "
-            + "FROM KEYS WHERE KEY_VALUE='%s'";
+    private static PreparedStatement psIsKeyExists;
+    private static boolean dbIsKeyExists(String key) throws SQLException {
+    	if (null == psIsKeyExists) {
+    		psIsKeyExists = getConnection().prepareStatement(
+    				"SELECT SET_ID FROM KEYS WHERE KEY_VALUE=?");
+    	}
+    	psIsKeyExists.setString(1, key);
+    	return psIsKeyExists.executeQuery().next();
+    }
 
-    private static final String SQL_SET_KEY_ACTIVE = "UPDATE KEYS "
-            + "SET ACTIVE=? "
-            + "WHERE KEY_VALUE=?";
+    private static PreparedStatement psSetKeyActive;
+    private static void dbSetKeyActive(String key, boolean active) throws SQLException {
+    	if (null == psSetKeyActive) {
+    		psSetKeyActive = getConnection().prepareStatement(
+    				"UPDATE KEYS SET ACTIVE=? WHERE KEY_VALUE=?");
+    	}
+    	psSetKeyActive.setBoolean(1, active);
+    	psSetKeyActive.setString(2, key);
+    	psSetKeyActive.executeUpdate();
+    }
 
     private static final String SQL_DELETE_SET = "DELETE FROM SETS "
             + "WHERE ID=";
@@ -93,11 +119,8 @@ public class DBLayer {
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
 				int id = rs.getInt(1);
-				ps = getConnection().prepareStatement(SQL_ADD_KEY);
 				for (KeyData key : setData.getKeys()) {
-					ps.setInt(1, id);
-					ps.setString(2, key.getKey());
-					ps.executeUpdate();
+					dbAddKey(id, key.getKey());
 				}
 				ps.close();
 				return id;
@@ -121,7 +144,7 @@ public class DBLayer {
 						rs.getDate(5)));
 			}
 			for (SetData setData : sets) {
-				rs = getConnection().createStatement().executeQuery(SQL_GET_KEYS + setData.getId());
+				rs = dbGetKeys(setData.getId());
 				while (rs.next()) {
 					setData.addKey(rs.getString(1), rs.getBoolean(2));
 				}
@@ -158,8 +181,7 @@ public class DBLayer {
 
 	static final boolean isKeyExists(String key) {
 		try {
-			ResultSet rs = getConnection().createStatement().executeQuery(String.format(SQL_GET_KEY, key));
-			return rs.next();
+			return dbIsKeyExists(key);
 		} catch (SQLException e) {
 			throw new KeyException("Ошибка чтения из базы", e);
 		}
@@ -167,11 +189,7 @@ public class DBLayer {
 
 	static final void setKeyActive(String key, boolean active) {
 		try {
-			PreparedStatement ps = getConnection().prepareStatement(SQL_SET_KEY_ACTIVE);
-			ps.setBoolean(1, active);
-			ps.setString(2, key);
-			ps.executeUpdate();
-			ps.close();
+			dbSetKeyActive(key, active);
 		} catch (SQLException e) {
 			throw new KeyException("Ошибка обновления базы", e);
 		}
