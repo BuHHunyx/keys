@@ -146,7 +146,7 @@ public class NewComposite extends Composite {
 		final String octetValue = textOctet.getText();
 		final int keys = spinnerCount.getSelection();
 		try {
-			new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
+			new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException,
 						InterruptedException {
@@ -154,6 +154,9 @@ public class NewComposite extends Composite {
 					for (int i = 0; i < keys; ++i) {
 						String key;
 						do {
+							if (monitor.isCanceled()) {
+								throw new InterruptedException();
+							}
 							key = KeyGenerator.generateKey(octetValue, octet);
 						} while (setData.isKeyExists(key));
 						setData.addKey(key, true);
