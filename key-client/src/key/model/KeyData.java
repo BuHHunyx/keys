@@ -5,10 +5,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class KeyData {
 
 	private final String key;
+	private boolean active;
 	private String hash;
 
-	public KeyData(String key) {
+	KeyData(String key) {
+		this(key, true);
+	}
+
+	KeyData(String key, boolean active) {
 		this.key = key;
+		this.active = active;
 	}
 
 	public String getKey() {
@@ -20,6 +26,14 @@ public class KeyData {
 			hash = DigestUtils.md5Hex(key);
 		}
 		return hash;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override

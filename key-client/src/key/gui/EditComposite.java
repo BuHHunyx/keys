@@ -28,6 +28,7 @@ public class EditComposite extends Composite {
 	private SetTable tableSet;
 	private KeyTable tableKey;
 	private Button buttonDeleteSet;
+	private Button buttonActivateKey;
 	private Button buttonDeleteKey;
 	private Button buttonExport;
 
@@ -89,12 +90,14 @@ public class EditComposite extends Composite {
 		gl.marginWidth = 0;
 		keyComposite.setLayout(gl);
 		tableKey = new KeyTable(keyComposite);
-		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
+		tableKey.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		tableKey.addSelectionListener(new KeyTable.KeySelectionListener() {
 			@Override
 			public void selected(KeyData keyData) {
 				selectedKeyData = keyData;
-				buttonDeleteKey.setEnabled(keyData != null);
+				boolean isKeySelected = (keyData != null);
+				buttonDeleteKey.setEnabled(isKeySelected);
+				buttonActivateKey.setEnabled(isKeySelected);
 			}
 		});
 
@@ -110,6 +113,18 @@ public class EditComposite extends Composite {
 		});
 		buttonDeleteSet.setEnabled(false);
 
+		buttonActivateKey = new Button(keyComposite, SWT.PUSH);
+		buttonActivateKey.setText("Блокировать/активировать ключ");
+		buttonActivateKey.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
+//		buttonActivateKey.setImage(new Image(getShell().getDisplay(), getClass().getResourceAsStream("/delete.gif")));
+		buttonActivateKey.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				activateSelectedKey();
+			}
+		});
+		buttonActivateKey.setEnabled(false);
+		
 		buttonDeleteKey = new Button(keyComposite, SWT.PUSH);
 		buttonDeleteKey.setText("Удаление ключа");
 		buttonDeleteKey.setLayoutData(new GridData(SWT.FILL, SWT.NONE, false, false));
@@ -172,6 +187,11 @@ public class EditComposite extends Composite {
 			selectedSetData.delete();
 			tableSet.deleteCurrent();
 		}
+	}
+
+	private void activateSelectedKey() {
+		selectedSetData.activateKey(selectedKeyData);
+		tableKey.refreshCurrent();
 	}
 
 	private void deleteSelectedKey() {

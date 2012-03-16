@@ -34,12 +34,15 @@ public class KeyTable {
 		table.setHeaderVisible(true);
 		table.addListener(SWT.SetData, new Listener() {
 			public void handleEvent(Event event) { 
-				TableItem item = (TableItem)event.item; 
+				TableItem item = (TableItem)event.item;
 				KeyData keyData = keys.get(event.index);
 				item.setText(COLUMN_INDEX, Integer.toString(event.index + 1));
 				item.setText(COLUMN_KEY, keyData.getKey());
 				item.setText(COLUMN_MD5, keyData.getHash());
 				item.setData(keyData);
+				if (!keyData.isActive()) {
+					item.setBackground(table.getDisplay().getSystemColor(SWT.COLOR_RED));
+				}
 			}
 		});
 
@@ -71,6 +74,10 @@ public class KeyTable {
 		if (null != selectionListener) {
 			selectionListener.selected(null);
 		}
+	}
+
+	public void refreshCurrent() {
+		table.clear(table.getSelectionIndex());
 	}
 
 	public void deleteCurrent() {

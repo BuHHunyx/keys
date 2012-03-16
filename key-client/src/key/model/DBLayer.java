@@ -19,14 +19,15 @@ public class DBLayer {
 			"CREATE TABLE SETS ( " 
 			+ "ID INTEGER IDENTITY PRIMARY KEY CLUSTERED, "
 			+ "DATETIME_CREATED DATETIME, " 
-			+ "COMMENT VARCHAR(255) NOT NULL, " 
-			+ "DATETIME_FROM DATETIME, " 
+			+ "COMMENT VARCHAR(255) NOT NULL, "
+			+ "DATETIME_FROM DATETIME, "
 			+ "DATETIME_TO DATETIME)";
 
 	private final static String SQL_CREATE_KEY = 
 			"CREATE TABLE KEYS ( "
-			+ "SET_ID BIGINT NOT NULL, " 
-			+ "KEY_VALUE VARCHAR(255))"; 
+			+ "SET_ID BIGINT NOT NULL, "
+			+ "KEY_VALUE VARCHAR(255), "
+			+ "ACTIVE BIT DEFAULT 1)"; 
 
 	private final static String SQL_ADD_SET = 
             "INSERT INTO SETS (DATETIME_CREATED, COMMENT, DATETIME_FROM, DATETIME_TO) "
@@ -41,18 +42,22 @@ public class DBLayer {
             + "FROM SETS";
 
     private static final String SQL_FILTER_SETS = "SELECT "
-            + "SETS.ID, SETS.DATETIME_CREATED, SETS.COMMENT, SETS.DATETIME_FROM, SETS.DATETIME_TO, KEYS.KEY_VALUE "
+            + "SETS.ID, SETS.DATETIME_CREATED, SETS.COMMENT, SETS.DATETIME_FROM, SETS.DATETIME_TO, KEYS.KEY_VALUE, KEYS.ACTIVE "
             + "FROM KEYS "
             + "INNER JOIN SETS ON ID=KEYS.SET_ID "
     		+ "WHERE KEYS.KEY_VALUE LIKE '%%%s%%'";
 
     private static final String SQL_GET_KEYS = "SELECT "
-            + "KEY_VALUE "
+            + "KEY_VALUE, ACTIVE "
             + "FROM KEYS WHERE SET_ID=";
 
     private static final String SQL_GET_KEY = "SELECT "
             + "SET_ID "
             + "FROM KEYS WHERE KEY_VALUE='%s'";
+
+    private static final String SQL_SET_KEY_ACTIVE = "UPDATE KEYS "
+            + "SET ACTIVE=? "
+            + "WHERE KEY_VALUE=?";
 
     private static final String SQL_DELETE_SET = "DELETE FROM SETS "
             + "WHERE ID=";
@@ -88,12 +93,13 @@ public class DBLayer {
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
 				int id = rs.getInt(1);
+				ps = getConnection().prepareStatement(SQL_ADD_KEY);
 				for (KeyData key : setData.getKeys()) {
-					ps = getConnection().prepareStatement(SQL_ADD_KEY);
 					ps.setInt(1, id);
 					ps.setString(2, key.getKey());
 					ps.executeUpdate();
 				}
+				ps.close();
 				return id;
 			}
 		} catch (SQLException e) {
@@ -117,7 +123,7 @@ public class DBLayer {
 			for (SetData setData : sets) {
 				rs = getConnection().createStatement().executeQuery(SQL_GET_KEYS + setData.getId());
 				while (rs.next()) {
-					setData.addKey(rs.getString(1));
+					setData.addKey(rs.getString(1), rs.getBoolean(2));
 				}
 			}
 		} catch (SQLException e) {
@@ -142,7 +148,7 @@ public class DBLayer {
 						rs.getDate(5));
 					sets.add(setData);
 				}
-				setData.addKey(rs.getString(6));
+				setData.addKey(rs.getString(6), rs.getBoolean(7));
 			}
 		} catch (SQLException e) {
 			throw new KeyException("Ошибка чтения из базы", e);
@@ -156,6 +162,18 @@ public class DBLayer {
 			return rs.next();
 		} catch (SQLException e) {
 			throw new KeyException("Ошибка чтения из базы", e);
+		}
+	}
+
+	static final void setKeyActive(String key, boolean active) {
+		try {
+			PreparedStatement ps = getConnection().prepareStatement(SQL_SET_KEY_ACTIVE);
+			ps.setBoolean(1, active);
+			ps.setString(2, key);
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e) {
+			throw new KeyException("Ошибка обновления базы", e);
 		}
 	}
 

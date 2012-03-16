@@ -62,12 +62,18 @@ public class SetData {
 		return keys.contains(new KeyData(key)) || DBLayer.isKeyExists(key);
 	}
 
-	public void addKey(String key) {
-		keys.add(new KeyData(key));
+	public void addKey(String key, boolean active) {
+		keys.add(new KeyData(key, active));
 	}
 
 	public List<KeyData> getKeys() {
 		return keys;
+	}
+
+	public void activateKey(KeyData keyData) {
+		boolean active = !keyData.isActive();
+		DBLayer.setKeyActive(keyData.getKey(), active);
+		keyData.setActive(active);
 	}
 
 	public void deleteKey(KeyData keyData) {

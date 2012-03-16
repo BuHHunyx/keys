@@ -156,7 +156,7 @@ public class NewComposite extends Composite {
 						do {
 							key = KeyGenerator.generateKey(octetValue, octet);
 						} while (setData.isKeyExists(key));
-						setData.addKey(key);
+						setData.addKey(key, true);
 						monitor.worked(1);
 					}
 				}
